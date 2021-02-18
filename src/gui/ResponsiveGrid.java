@@ -1,5 +1,7 @@
 package gui;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
@@ -21,12 +23,14 @@ public class ResponsiveGrid extends GridPane {
         }
     }
 
-    public void addCuteButton(String text, String normalBackgroundColor, String normalForegroundColor, String hoverBackgroundColor, String hoverForegroundColor,int columnIndex, int rowIndex){
+    public CuteButton addCuteButton(String text, String normalBackgroundColor, String normalForegroundColor, String hoverBackgroundColor,
+                              String hoverForegroundColor, int columnIndex, int rowIndex){
         CuteButton button = new CuteButton(text,normalBackgroundColor, normalForegroundColor);
         button.setHoverColors(hoverBackgroundColor,hoverForegroundColor);
         add(button,columnIndex,rowIndex);
         GridPane.setFillWidth(button, true);
         GridPane.setFillHeight(button, true);
+        return button;
     }
 }
 
