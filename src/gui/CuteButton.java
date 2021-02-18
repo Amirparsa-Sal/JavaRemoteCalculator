@@ -19,6 +19,7 @@ public class CuteButton extends Button {
     private final String style = "-fx-text-alignment: center; -fx-font-size: 50;";
     private String normalStyle = style;
     private String hoverStyle = style;
+    private ButtonType type = ButtonType.UNKNOWN;
 
     public CuteButton(String text, String backgroundColor, String foregroundColor){
         super(text);
@@ -27,6 +28,7 @@ public class CuteButton extends Button {
         setNormalColors(backgroundColor,foregroundColor);
         setStyle(normalStyle);
         updateHoverEvent();
+        updateClickEvent();
 
         setEffect(new Lighting());
     }
@@ -47,8 +49,29 @@ public class CuteButton extends Button {
         updateHoverEvent();
     }
 
+    public void setButtonType(ButtonType type){
+        this.type = type;
+    }
 
+    public ButtonType getType() {
+        return type;
+    }
 
+    private void updateClickEvent(){
+        setOnMousePressed(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Controller.getInstance().handleActions(CuteButton.this);
+                CuteButton.this.setStyle(normalStyle);
+                PauseTransition pt = new PauseTransition(Duration.millis(100));
+                pt.setOnFinished(e -> {
+                    if (CuteButton.this.isHover())
+                        setStyle(hoverStyle);
+                });
+                pt.play();
+            }
+        });
+    }
 
     private void updateHoverEvent(){
         setOnMouseEntered(new EventHandler<MouseEvent>() {
@@ -68,10 +91,11 @@ public class CuteButton extends Button {
         });
     }
 
-    private class AcceleratorHandler implements  Runnable{
+    private class AcceleratorHandler implements Runnable{
 
         @Override
         public void run() {
+            Controller.getInstance().handleActions(CuteButton.this);
             CuteButton.this.setStyle(hoverStyle);
             PauseTransition pt = new PauseTransition(Duration.millis(250));
             pt.setOnFinished(event -> {
