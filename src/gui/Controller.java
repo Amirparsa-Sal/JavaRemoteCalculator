@@ -2,11 +2,14 @@ package gui;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
-import javafx.scene.layout.*;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
+import logic.MathExpressionParser;
+
+import java.util.ArrayList;
 
 public class Controller extends Application {
 
@@ -16,20 +19,21 @@ public class Controller extends Application {
 
     private static Controller instance = null;
 
-    public static Controller getInstance(){
+    public static Controller getInstance() {
         if (instance == null)
             instance = new Controller();
         return instance;
     }
 
-    public Controller(){}
+    public Controller() {
+    }
 
     @Override
     public void start(Stage stage) throws Exception {
         stage.setMinHeight(650);
         stage.setMinWidth(700);
 
-        ResponsiveGrid grid = new ResponsiveGrid(4,7);
+        ResponsiveGrid grid = new ResponsiveGrid(4, 7);
         grid.setPrefSize(700, 650); // Default width and height
         grid.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
@@ -37,31 +41,30 @@ public class Controller extends Application {
         stage.setScene(scene);
 
         saved = new CuteLabel("", "black", "aqua");
-        grid.add(saved,0,0,4,1);
+//        saved.setFont(new Font("Arial",30));
+        grid.add(saved, 0, 0, 4, 1);
 
         temp = new CuteLabel("", "black", "aqua");
-        grid.add(temp,0,1,4,1);
+        grid.add(temp, 0, 1, 4, 1);
 
         CuteButton b;
 
-        b = grid.addCuteButton("(","#a5a5a5", "black", "#dbdbdb", "black",0,2);
+        b = grid.addCuteButton("(", "#a5a5a5", "black", "#dbdbdb", "black", 0, 2);
         b.addAccelerator(KeyCode.DIGIT9, KeyCombination.SHIFT_DOWN);
         b.setButtonType(ButtonType.PARENTHESIS);
 
-        b = grid.addCuteButton(")","#a5a5a5", "black", "#dbdbdb", "black",1,2);
+        b = grid.addCuteButton(")", "#a5a5a5", "black", "#dbdbdb", "black", 1, 2);
         b.addAccelerator(KeyCode.DIGIT0, KeyCombination.SHIFT_DOWN);
         b.setButtonType(ButtonType.PARENTHESIS);
 
-        b = grid.addCuteButton("<","#a5a5a5", "black", "#dbdbdb", "black",2,2);
+        b = grid.addCuteButton("<", "#a5a5a5", "black", "#dbdbdb", "black", 2, 2);
         b.addAccelerator(KeyCode.BACK_SPACE);
         b.setButtonType(ButtonType.DELETE);
 
-        b = grid.addCuteButton("/","#fe9c09", "white","#ffc832","aqua",3,2);
+        b = grid.addCuteButton("/", "#fe9c09", "white", "#ffc832", "aqua", 3, 2);
         b.addAccelerator(KeyCode.SLASH);
         b.addAccelerator(KeyCode.DIVIDE);
         b.setButtonType(ButtonType.OPERATOR);
-
-
 
 
         Integer counter = 9;
@@ -74,19 +77,19 @@ public class Controller extends Application {
                 counter--;
             }
         }
-        b = grid.addCuteButton("×","#fe9c09", "white","#ffc832","aqua",3,3);
+        b = grid.addCuteButton("×", "#fe9c09", "white", "#ffc832", "aqua", 3, 3);
         b.addAccelerator(KeyCode.MULTIPLY);
         b.setButtonType(ButtonType.OPERATOR);
 
-        b = grid.addCuteButton("-","#fe9c09", "white","#ffc832","aqua",3,4);
+        b = grid.addCuteButton("-", "#fe9c09", "white", "#ffc832", "aqua", 3, 4);
         b.addAccelerator(KeyCode.SUBTRACT);
         b.setButtonType(ButtonType.OPERATOR);
 
-        b = grid.addCuteButton("+","#fe9c09", "white","#ffc832","aqua",3,5);
+        b = grid.addCuteButton("+", "#fe9c09", "white", "#ffc832", "aqua", 3, 5);
         b.addAccelerator(KeyCode.ADD);
         b.setButtonType(ButtonType.OPERATOR);
 
-        b = grid.addCuteButton("C","#343434", "white", "#737272", "white",0,6);
+        b = grid.addCuteButton("C", "#343434", "white", "#737272", "white", 0, 6);
         b.addAccelerator(KeyCode.DELETE);
         b.setButtonType(ButtonType.C);
 
@@ -97,33 +100,32 @@ public class Controller extends Application {
         b.setButtonType(ButtonType.NUMBER);
 
 
-        b = grid.addCuteButton(".","#343434", "white", "#737272", "white",2,6);
+        b = grid.addCuteButton(".", "#343434", "white", "#737272", "white", 2, 6);
         b.addAccelerator(KeyCode.PERIOD);
         b.setButtonType(ButtonType.DOT);
 
-        b = grid.addCuteButton("=","#fe9c09", "white","#ffc832","aqua",3,6);
+        b = grid.addCuteButton("=", "#fe9c09", "white", "#ffc832", "aqua", 3, 6);
         b.addAccelerator(KeyCode.ENTER);
         b.setButtonType(ButtonType.EQUAL);
 
         stage.show();
     }
 
-    void handleActions(CuteButton button){
+    void handleActions(CuteButton button) {
         String text = button.getText();
-        switch (button.getType()){
+        switch (button.getType()) {
             case NUMBER:
                 String newText;
-                try{
+                try {
                     newText = new Integer(Integer.parseInt(temp.getText() + text)).toString();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     newText = new Double(Double.parseDouble(temp.getText() + text)).toString();
                 }
                 temp.setText(newText);
                 break;
 
             case OPERATOR:
-                if(temp.lastChar() != '.') {
+                if (temp.lastChar() != '.') {
                     if (temp.isNumeric()) {
                         if (saved.lastChar() == ')')
                             saved.addText("×");
@@ -135,27 +137,24 @@ public class Controller extends Application {
                         temp.clear();
                     } else
                         temp.raiseError("Invalid input!");
-                }
-                else
+                } else
                     temp.raiseError("Invalid number!");
                 break;
 
             case PARENTHESIS:
-                if(text.equals("("))
+                if (text.equals("("))
                     parenthesis++;
                 else
                     parenthesis--;
-                if(parenthesis < 0){
+                if (parenthesis < 0) {
                     parenthesis++;
                     temp.raiseError("Parenthesis error!");
-                }
-                else{
-                    if(text.equals(")") && saved.lastChar() == '(' && temp.isEmpty()) {
+                } else {
+                    if (text.equals(")") && saved.lastChar() == '(' && !temp.isNumeric()) {
                         temp.raiseError("Empty parenthesis!");
                         parenthesis++;
-                    }
-                    else{
-                        if(temp.lastChar() != '.') {
+                    } else {
+                        if (temp.lastChar() != '.') {
                             if (temp.isNumeric()) {
                                 saved.addText(temp.getText());
                                 if (text.equals("("))
@@ -163,8 +162,7 @@ public class Controller extends Application {
                             }
                             saved.addText(text);
                             temp.clear();
-                        }
-                        else
+                        } else
                             temp.raiseError("Invalid number!");
                     }
                 }
@@ -180,10 +178,33 @@ public class Controller extends Application {
                 break;
 
             case DOT:
-                if(temp.isNumeric())
+                if (temp.isNumeric())
                     temp.addText(".");
                 else
                     temp.raiseError("Can't place \".\"");
+                break;
+
+            case EQUAL:
+                if(temp.lastChar() == '.') {
+                    temp.raiseError("Invalid number!");
+                    break;
+                }
+                else if(temp.isNumeric())
+                    saved.addText(temp.getText());
+                if(parenthesis != 0)
+                    temp.raiseError("Invalid parenthesis!");
+                else if(MathExpressionParser.getOperators().containsKey(saved.lastChar()))
+                    temp.raiseError("Operator at end!");
+                else if(!temp.getText().equals("") && saved.lastChar() != ')' && temp.isOperator())
+                    temp.raiseError("Operator at end!");
+                else if(!temp.isNumeric() && !temp.isOperator())
+                    break;
+                else {
+                    temp.clear();
+                    ArrayList<String> list = MathExpressionParser.expressionToList(saved.getText());
+                    for(String s : list)
+                        System.out.println(s);
+                }
                 break;
         }
     }

@@ -1,18 +1,14 @@
 package gui;
 
-import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
-import javafx.animation.Timeline;
-import javafx.event.Event;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.geometry.Point2D;
 import javafx.scene.control.Button;
 import javafx.scene.effect.Lighting;
-import javafx.scene.input.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseEvent;
 import javafx.util.Duration;
-
-import java.util.concurrent.TimeUnit;
 
 public class CuteButton extends Button {
 
@@ -21,11 +17,11 @@ public class CuteButton extends Button {
     private String hoverStyle = style;
     private ButtonType type = ButtonType.UNKNOWN;
 
-    public CuteButton(String text, String backgroundColor, String foregroundColor){
+    public CuteButton(String text, String backgroundColor, String foregroundColor) {
         super(text);
         setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
 
-        setNormalColors(backgroundColor,foregroundColor);
+        setNormalColors(backgroundColor, foregroundColor);
         setStyle(normalStyle);
         updateHoverEvent();
         updateClickEvent();
@@ -33,23 +29,23 @@ public class CuteButton extends Button {
         setEffect(new Lighting());
     }
 
-    public void addAccelerator(KeyCode keyCode, KeyCombination.Modifier ... modifiers){
-        KeyCombination kc = new KeyCodeCombination(keyCode,modifiers);
+    public void addAccelerator(KeyCode keyCode, KeyCombination.Modifier... modifiers) {
+        KeyCombination kc = new KeyCodeCombination(keyCode, modifiers);
         Runnable acceleration = new AcceleratorHandler();
-        this.getScene().getAccelerators().put(kc,acceleration);
+        this.getScene().getAccelerators().put(kc, acceleration);
     }
 
-    public void setNormalColors(String background, String foreground){
+    public void setNormalColors(String background, String foreground) {
         normalStyle = style + "-fx-background-color:" + background + ";-fx-text-fill: " + foreground + ";";
         updateExitEvent();
     }
 
-    public void setHoverColors(String background, String foreground){
+    public void setHoverColors(String background, String foreground) {
         hoverStyle = style + "-fx-background-color:" + background + ";-fx-text-fill: " + foreground + ";";
         updateHoverEvent();
     }
 
-    public void setButtonType(ButtonType type){
+    public void setButtonType(ButtonType type) {
         this.type = type;
     }
 
@@ -57,7 +53,7 @@ public class CuteButton extends Button {
         return type;
     }
 
-    private void updateClickEvent(){
+    private void updateClickEvent() {
         setOnMousePressed(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -73,7 +69,7 @@ public class CuteButton extends Button {
         });
     }
 
-    private void updateHoverEvent(){
+    private void updateHoverEvent() {
         setOnMouseEntered(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -82,7 +78,7 @@ public class CuteButton extends Button {
         });
     }
 
-    private void updateExitEvent(){
+    private void updateExitEvent() {
         setOnMouseExited(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -91,7 +87,7 @@ public class CuteButton extends Button {
         });
     }
 
-    private class AcceleratorHandler implements Runnable{
+    private class AcceleratorHandler implements Runnable {
 
         @Override
         public void run() {
