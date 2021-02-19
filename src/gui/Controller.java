@@ -193,7 +193,7 @@ public class Controller extends Application {
                     saved.addText(temp.getText());
                 if(parenthesis != 0)
                     temp.raiseError("Invalid parenthesis!");
-                else if(MathExpressionParser.getOperators().containsKey(saved.lastChar()))
+                else if(MathExpressionParser.isOperator(saved.lastChar()))
                     temp.raiseError("Operator at end!");
                 else if(!temp.getText().equals("") && saved.lastChar() != ')' && temp.isOperator())
                     temp.raiseError("Operator at end!");

@@ -4,6 +4,10 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
+import logic.MathExpressionParser;
+
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Main extends Application {
 
@@ -16,6 +20,8 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
+//        String s = new String("1+2*(3/(4+5))*6-3");
+//        System.out.println(MathExpressionParser.calculatePostfix(MathExpressionParser.infixToPostfix(s)));
         launch(args);
     }
 }
