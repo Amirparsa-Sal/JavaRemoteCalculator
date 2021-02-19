@@ -1,15 +1,13 @@
 package gui;
 
+import client.Client;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Region;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import logic.MathExpressionParser;
-
-import java.util.ArrayList;
 
 public class Controller extends Application {
 
@@ -25,9 +23,6 @@ public class Controller extends Application {
         return instance;
     }
 
-    public Controller() {
-    }
-
     @Override
     public void start(Stage stage) throws Exception {
         stage.setMinHeight(650);
@@ -41,7 +36,6 @@ public class Controller extends Application {
         stage.setScene(scene);
 
         saved = new CuteLabel("", "black", "aqua");
-//        saved.setFont(new Font("Arial",30));
         grid.add(saved, 0, 0, 4, 1);
 
         temp = new CuteLabel("", "black", "aqua");
@@ -77,7 +71,7 @@ public class Controller extends Application {
                 counter--;
             }
         }
-        b = grid.addCuteButton("×", "#fe9c09", "white", "#ffc832", "aqua", 3, 3);
+        b = grid.addCuteButton("*", "#fe9c09", "white", "#ffc832", "aqua", 3, 3);
         b.addAccelerator(KeyCode.MULTIPLY);
         b.setButtonType(ButtonType.OPERATOR);
 
@@ -101,11 +95,12 @@ public class Controller extends Application {
 
 
         b = grid.addCuteButton(".", "#343434", "white", "#737272", "white", 2, 6);
-        b.addAccelerator(KeyCode.PERIOD);
+        b.addAccelerator(KeyCode.PERIOD)    ;
         b.setButtonType(ButtonType.DOT);
 
         b = grid.addCuteButton("=", "#fe9c09", "white", "#ffc832", "aqua", 3, 6);
         b.addAccelerator(KeyCode.ENTER);
+        b.addAccelerator(KeyCode.EQUALS);
         b.setButtonType(ButtonType.EQUAL);
 
         stage.show();
@@ -117,9 +112,9 @@ public class Controller extends Application {
             case NUMBER:
                 String newText;
                 try {
-                    newText = new Integer(Integer.parseInt(temp.getText() + text)).toString();
+                    newText = String.valueOf(Integer.parseInt(temp.getText() + text));
                 } catch (Exception e) {
-                    newText = new Double(Double.parseDouble(temp.getText() + text)).toString();
+                    newText = String.valueOf(Double.parseDouble(temp.getText() + text));
                 }
                 temp.setText(newText);
                 break;
@@ -185,25 +180,31 @@ public class Controller extends Application {
                 break;
 
             case EQUAL:
-                if(temp.lastChar() == '.') {
+                if (temp.lastChar() == '.') {
                     temp.raiseError("Invalid number!");
                     break;
-                }
-                else if(temp.isNumeric())
+                } else if (temp.isNumeric())
                     saved.addText(temp.getText());
-                if(parenthesis != 0)
+                if (parenthesis != 0)
                     temp.raiseError("Invalid parenthesis!");
-                else if(MathExpressionParser.isOperator(saved.lastChar()))
+                else if (MathExpressionParser.isOperator(saved.lastChar()))
                     temp.raiseError("Operator at end!");
-                else if(!temp.getText().equals("") && saved.lastChar() != ')' && temp.isOperator())
+                else if (!temp.getText().equals("") && saved.lastChar() != ')' && temp.isOperator())
                     temp.raiseError("Operator at end!");
-                else if(!temp.isNumeric() && !temp.isOperator())
+                else if (!temp.isNumeric() && !temp.isOperator())
                     break;
                 else {
                     temp.clear();
-                    ArrayList<String> list = MathExpressionParser.expressionToList(saved.getText());
-                    for(String s : list)
-                        System.out.println(s);
+                    try {
+                        Client client = new Client();
+                        client.sendRequest(saved.getText());
+                        String response = client.getResponse();
+                        saved.clear();
+                        temp.setText(response);
+                    } catch (Exception e) {
+                        temp.raiseError("Server not found!");
+                    }
+
                 }
                 break;
         }

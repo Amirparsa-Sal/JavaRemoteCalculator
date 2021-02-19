@@ -5,7 +5,7 @@ public abstract class Operator {
     private char sign;
     private int precedence;
 
-    public Operator(char sign, int precedence){
+    public Operator(char sign, int precedence) {
         this.sign = sign;
         this.precedence = precedence;
     }
@@ -14,7 +14,7 @@ public abstract class Operator {
         return sign;
     }
 
-    public boolean hasMorePrecedence(Operator o){
+    public boolean hasMorePrecedence(Operator o) {
         return precedence > o.precedence;
     }
 
