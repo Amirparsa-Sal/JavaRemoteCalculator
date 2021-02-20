@@ -150,7 +150,6 @@ public class Controller extends Application {
                 if (temp.lastChar() != '.') {
                 	//adding temp number to saved
                     if (temp.isNumeric()) {
-                    	System.out.println("here");
                         if (StringUtils.lastChar(infix) == ')'){
                             saved.addText("*");
                             infix += "*";

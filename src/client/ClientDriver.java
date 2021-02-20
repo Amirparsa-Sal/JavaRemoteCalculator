@@ -19,6 +19,7 @@ public class ClientDriver extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../gui/sample.fxml"));
         Application app = Controller.getInstance();
+        primaryStage.setTitle("Java Remote Calculator");
         app.start(primaryStage);
     }
 }
