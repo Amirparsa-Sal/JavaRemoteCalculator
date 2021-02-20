@@ -5,6 +5,7 @@ import javafx.animation.PauseTransition;
 import javafx.scene.control.Label;
 import javafx.scene.effect.Lighting;
 import javafx.util.Duration;
+import logic.StringUtils;
 
 public class CuteLabel extends Label {
 
@@ -26,7 +27,7 @@ public class CuteLabel extends Label {
     }
 
     public boolean isEmpty() {
-        return getText().equals("");
+        return StringUtils.isEmpty(getText());
     }
 
     public void addText(String text) {
@@ -42,43 +43,23 @@ public class CuteLabel extends Label {
     }
 
     public void deleteLast() {
-        if (isEmpty())
-            return;
-        String text = getText().substring(0, getText().length() - 1);
-        setText(text);
+        setText(StringUtils.deleteLast(getText()));
     }
 
     public boolean isNumeric() {
-        if (isEmpty())
-            return false;
-        String text = getText();
-        for (int i = 0; i < text.length(); i++)
-            if ((text.charAt(i) < '0' || text.charAt(i) > '9') && text.charAt(i) != '.')
-                return false;
-        return true;
+        return StringUtils.isNumeric(getText());
     }
 
     public boolean isOperator() {
-        if (isNumeric())
-            return false;
-        String text = getText();
-        for (int i = 0; i < text.length(); i++)
-            if ((text.charAt(i) >= 'a' && text.charAt(i) <= 'z') || (text.charAt(i) >= 'A' && text.charAt(i) <= 'Z'))
-                return false;
-        return true;
+        return StringUtils.isOperator(getText());
     }
 
     public boolean isLastNumeric() {
-        if (isEmpty())
-            return false;
-        return lastChar() >= '0' && lastChar() <= '9';
+        return StringUtils.isLastNumeric(getText());
     }
 
     public Character lastChar() {
-        if (isEmpty())
-            return '\0';
-        String text = getText();
-        return text.charAt(text.length() - 1);
+        return StringUtils.lastChar(getText());
     }
 
     public void raiseError(String message) {

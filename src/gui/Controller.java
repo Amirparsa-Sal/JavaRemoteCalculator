@@ -8,12 +8,15 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import logic.MathExpressionParser;
+import logic.StringUtils;
 
 public class Controller extends Application {
 
     private CuteLabel saved;
     private CuteLabel temp;
     private int parenthesis = 0;
+    private String infix = new String("");
+    boolean operatorAtFirst = false;
 
     private static Controller instance = null;
 
@@ -120,20 +123,39 @@ public class Controller extends Application {
                 break;
 
             case OPERATOR:
+            	//floating point at the end
                 if (temp.lastChar() != '.') {
+                	//adding temp number to saved
                     if (temp.isNumeric()) {
-                        if (saved.lastChar() == ')')
-                            saved.addText("×");
+                    	System.out.println("here");
+                        if (StringUtils.lastChar(infix) == ')'){
+                            saved.addText("*");
+                            infix += "*";
+                        }
                         saved.addText(temp.getText());
+                    	infix += temp.getText();
+                    	if(operatorAtFirst){
+                    		operatorAtFirst = false;
+                    		infix += ")";
+                    	}
                     }
-
-                    if (saved.isLastNumeric() || saved.lastChar() == ')') {
+                    //check if last character is number or parenthesis
+                    if (StringUtils.isLastNumeric(infix) || StringUtils.lastChar(infix) == ')') {
                         saved.addText(text);
+                        infix += text;
                         temp.clear();
-                    } else
+                    } 
+                    //if we have operaters at first
+                    else if((text.equals("+") || text.equals("-")) && (StringUtils.isEmpty(infix) || StringUtils.lastChar(infix) == '(')){
+                    	saved.addText(text);
+                    	infix += "(0" + text;
+                    	operatorAtFirst = true;
+                    }
+                    else
                         temp.raiseError("Invalid input!");
                 } else
                     temp.raiseError("Invalid number!");
+                System.out.println(infix);
                 break;
 
             case PARENTHESIS:
@@ -145,31 +167,55 @@ public class Controller extends Application {
                     parenthesis++;
                     temp.raiseError("Parenthesis error!");
                 } else {
-                    if (text.equals(")") && saved.lastChar() == '(' && !temp.isNumeric()) {
+                    if (text.equals(")") && StringUtils.lastChar(infix) == '(' && !temp.isNumeric()) {
                         temp.raiseError("Empty parenthesis!");
                         parenthesis++;
                     } else {
+
                         if (temp.lastChar() != '.') {
                             if (temp.isNumeric()) {
                                 saved.addText(temp.getText());
-                                if (text.equals("("))
-                                    saved.addText("×");
+                                infix += temp.getText();
+                                if(operatorAtFirst){
+		                    		operatorAtFirst = false;
+		                    		infix += ")";
+		                    	}
+                                if (text.equals("(")){
+                                    if(operatorAtFirst){
+			                    		operatorAtFirst = false;
+			                    		infix += ")";
+			                    	}
+                                    infix += "*";
+                                }
                             }
+                            if(StringUtils.lastChar(infix)==')' && text.equals("(")){
+                            	if(operatorAtFirst){
+		                    		operatorAtFirst = false;
+		                    		infix += ")";
+		                    	}
+                            	infix += "*";
+                            }
+                            
                             saved.addText(text);
+                            infix += text;
                             temp.clear();
                         } else
                             temp.raiseError("Invalid number!");
                     }
                 }
+                System.out.println(infix);
                 break;
 
             case DELETE:
                 temp.deleteLast();
+                System.out.println(infix);
                 break;
 
             case C:
                 temp.clear();
                 saved.clear();
+                infix = "";
+                System.out.println(infix);
                 break;
 
             case DOT:
@@ -177,35 +223,46 @@ public class Controller extends Application {
                     temp.addText(".");
                 else
                     temp.raiseError("Can't place \".\"");
+                System.out.println(infix);
                 break;
 
             case EQUAL:
                 if (temp.lastChar() == '.') {
                     temp.raiseError("Invalid number!");
                     break;
-                } else if (temp.isNumeric())
+                } else if (temp.isNumeric()){
                     saved.addText(temp.getText());
-                if (parenthesis != 0)
-                    temp.raiseError("Invalid parenthesis!");
-                else if (MathExpressionParser.isOperator(saved.lastChar()))
+                    infix += temp.getText();
+                }
+                if (parenthesis != 0){
+                    for(int i =0; i < parenthesis; i++)
+                    	infix += ")";
+    				parenthesis = 0;
+                }
+                if (MathExpressionParser.isOperator(StringUtils.lastChar(infix)))
                     temp.raiseError("Operator at end!");
-                else if (!temp.getText().equals("") && saved.lastChar() != ')' && temp.isOperator())
+                else if (!temp.getText().equals("") && StringUtils.lastChar(infix) != ')' && temp.isOperator())
                     temp.raiseError("Operator at end!");
                 else if (!temp.isNumeric() && !temp.isOperator())
                     break;
                 else {
                     temp.clear();
                     try {
+                    	System.out.println(infix);
                         Client client = new Client();
-                        client.sendRequest(saved.getText());
+                        client.sendRequest(infix);
                         String response = client.getResponse();
                         saved.clear();
-                        temp.setText(response);
+                        saved.setText(response);
+                        infix = new String(response);
+                        if(response.charAt(0) == '-')
+                        	infix = "(0" + infix + ")";
                     } catch (Exception e) {
                         temp.raiseError("Server not found!");
                     }
 
                 }
+                System.out.println(infix);
                 break;
         }
     }
