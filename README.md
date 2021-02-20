@@ -3,7 +3,7 @@ A client-server multi threaded calculator based on JavaFX.
 
 ![Capture](https://user-images.githubusercontent.com/60196448/108602373-d6ce0480-73b6-11eb-967a-f35aa36a2afa.PNG)
 
-## Running on windows using command line
+## Running on windows using command prompt
 
 There is two batch script files in the project which you can use them to run the program.
 
