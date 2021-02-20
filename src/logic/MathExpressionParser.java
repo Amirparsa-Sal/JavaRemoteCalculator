@@ -3,8 +3,14 @@ package logic;
 import java.util.ArrayList;
 import java.util.Stack;
 
+/**
+ * Represents a class for parsing math expressions.
+ *
+ * @author Amirparsa Salmankhah
+ */
 public class MathExpressionParser {
 
+    //List of defined operators
     private static ArrayList<Operator> operators;
 
     static {
@@ -43,10 +49,21 @@ public class MathExpressionParser {
         operators.add(div);
     }
 
+    /**
+     * Gets list of defined operators.
+     *
+     * @return List of operators.
+     */
     public static ArrayList<Operator> getOperators() {
         return operators;
     }
 
+    /**
+     * Converts a math expression to an ArrayList of its contents.
+     *
+     * @param exp input math expression
+     * @return An ArrayList of math expression contents.
+     */
     public static ArrayList<String> expressionToList(String exp) {
         StringBuilder temp = new StringBuilder();
         ArrayList<String> list = new ArrayList<>();
@@ -66,6 +83,12 @@ public class MathExpressionParser {
         return list;
     }
 
+    /**
+     * Converts an infix expression to a postfix expression.
+     *
+     * @param infix input infix expression.
+     * @return The postfix expression.
+     */
     public static ArrayList<String> infixToPostfix(String infix) {
         ArrayList<String> list = expressionToList(infix);
         Stack<String> opStack = new Stack<>();
@@ -99,6 +122,12 @@ public class MathExpressionParser {
         return output;
     }
 
+    /**
+     * Calculates the amount of postfix expression.
+     *
+     * @param list ArrayList of postfix expression contents.
+     * @return Amount of postfix expression.
+     */
     public static Double calculatePostfix(ArrayList<String> list) {
         Stack<Double> stack = new Stack<>();
         for (String s : list) {
@@ -113,6 +142,12 @@ public class MathExpressionParser {
         return stack.peek();
     }
 
+    /**
+     * Checks if we have a operator with c sign.
+     *
+     * @param c sign of the operator as character.
+     * @return true if yes and false if not.
+     */
     public static boolean isOperator(char c) {
         for (Operator o : operators)
             if (o.getSign() == c)
@@ -120,10 +155,22 @@ public class MathExpressionParser {
         return false;
     }
 
+    /**
+     * Checks if we have a operator with s sign.
+     *
+     * @param s sign of the operator as string.
+     * @return true if yes and false if not.
+     */
     public static boolean isOperator(String s) {
         return isOperator(s.charAt(0));
     }
 
+    /**
+     * Gets operator object by its sign.
+     *
+     * @param c sign of the operator as character.
+     * @return Operator object
+     */
     private static Operator getOperatorBySign(char c) {
         for (Operator o : operators)
             if (o.getSign() == c)
@@ -131,6 +178,12 @@ public class MathExpressionParser {
         return null;
     }
 
+    /**
+     * Gets operator object by its sign.
+     *
+     * @param s sign of the operator as string.
+     * @return Operator object
+     */
     private static Operator getOperatorBySign(String s) {
         for (Operator o : operators)
             if (o.getSign() == s.charAt(0))

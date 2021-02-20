@@ -6,11 +6,21 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * Represents a class for server.
+ *
+ * @author Amirparsa Salmankhah
+ */
 public class Server {
 
+    //Server default port
     public static int DEFAULT_PORT = 8080;
+    //Server socket
     private ServerSocket serverSocket;
 
+    /**
+     * Constructor with no arguments.
+     */
     public Server() {
         try {
             serverSocket = new ServerSocket(DEFAULT_PORT);
@@ -25,10 +35,18 @@ public class Server {
         }
     }
 
-    public class RequestHandler implements Runnable {
+    /**
+     * Represents a class for handling clients request.
+     */
+    private class RequestHandler implements Runnable {
 
+        //Client socket
         private Socket socket;
 
+        /**
+         * Constructor with 1 argument.
+         * @param socket Client socket.
+         */
         public RequestHandler(Socket socket) {
             this.socket = socket;
         }

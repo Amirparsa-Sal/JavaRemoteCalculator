@@ -3,11 +3,21 @@ package client;
 import java.io.*;
 import java.net.Socket;
 
+/**
+ * Represents a client.
+ *
+ * @author Amirparsa Salmankhah
+ */
 public class Client {
 
+    //Client socket
     private Socket socket;
+    //Response of the request
     private String response;
 
+    /**
+     * Constructor with no argument.
+     */
     public Client() {
         try {
             socket = new Socket("localhost", 8080);
@@ -17,6 +27,11 @@ public class Client {
         }
     }
 
+    /**
+     * Sends request to the server.
+     *
+     * @param infix input infix string to be calculated.
+     */
     public void sendRequest(String infix) {
         try {
             DataOutputStream out = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
@@ -32,6 +47,11 @@ public class Client {
         }
     }
 
+    /**
+     * Gets response of the request.
+     *
+     * @return Response of the request.
+     */
     public String getResponse() {
         return response;
     }

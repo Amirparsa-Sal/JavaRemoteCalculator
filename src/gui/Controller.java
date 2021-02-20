@@ -10,22 +10,41 @@ import javafx.stage.Stage;
 import logic.MathExpressionParser;
 import logic.StringUtils;
 
+/**
+ * Represents a class for controlling gui.
+ *
+ * @author Amirparsa Salmankhah
+ */
 public class Controller extends Application {
 
+    //Upper calculation label
     private CuteLabel saved;
+    //Label in front.
     private CuteLabel temp;
+    //Difference of opened and closed parenthesis.
     private int parenthesis = 0;
-    private String infix = new String("");
+    //Real infix string to be calculated.
+    private String infix = "";
+    //flag for checking the use of operators at the first of the expression.
     boolean operatorAtFirst = false;
-
+    //Controller instance
     private static Controller instance = null;
 
+    /**
+     * Gets controller instance.
+     * @return Controller instance.
+     */
     public static Controller getInstance() {
         if (instance == null)
             instance = new Controller();
         return instance;
     }
 
+    /**
+     * Initializes gui.
+     * @param stage Current stage.
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
         stage.setMinHeight(650);
@@ -109,6 +128,10 @@ public class Controller extends Application {
         stage.show();
     }
 
+    /**
+     * handles action of a button.
+     * @param button Triggered button.
+     */
     void handleActions(CuteButton button) {
         String text = button.getText();
         switch (button.getType()) {
@@ -155,7 +178,6 @@ public class Controller extends Application {
                         temp.raiseError("Invalid input!");
                 } else
                     temp.raiseError("Invalid number!");
-                System.out.println(infix);
                 break;
 
             case PARENTHESIS:
@@ -203,19 +225,16 @@ public class Controller extends Application {
                             temp.raiseError("Invalid number!");
                     }
                 }
-                System.out.println(infix);
                 break;
 
             case DELETE:
                 temp.deleteLast();
-                System.out.println(infix);
                 break;
 
             case C:
                 temp.clear();
                 saved.clear();
                 infix = "";
-                System.out.println(infix);
                 break;
 
             case DOT:
@@ -223,7 +242,6 @@ public class Controller extends Application {
                     temp.addText(".");
                 else
                     temp.raiseError("Can't place \".\"");
-                System.out.println(infix);
                 break;
 
             case EQUAL:
@@ -248,7 +266,6 @@ public class Controller extends Application {
                 else {
                     temp.clear();
                     try {
-                    	System.out.println(infix);
                         Client client = new Client();
                         client.sendRequest(infix);
                         String response = client.getResponse();
@@ -262,7 +279,6 @@ public class Controller extends Application {
                     }
 
                 }
-                System.out.println(infix);
                 break;
         }
     }

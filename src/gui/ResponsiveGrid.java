@@ -4,8 +4,18 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 
+/**
+ * Represents a class for responsive grid.
+ *
+ * @author Amirparsa Salmankhah
+ */
 public class ResponsiveGrid extends GridPane {
 
+    /**
+     * Constructor with 2 arguments.
+     * @param columnNumber Number of the columns.
+     * @param rowNumber Number of the rows.
+     */
     public ResponsiveGrid(int columnNumber, int rowNumber) {
         super();
 
@@ -21,6 +31,17 @@ public class ResponsiveGrid extends GridPane {
         }
     }
 
+    /**
+     * Adds a cute button to the grid.
+     * @param text Text of the button.
+     * @param normalBackgroundColor normal background of the color.
+     * @param normalForegroundColor normal foreground of the color.
+     * @param hoverBackgroundColor hover background of the color.
+     * @param hoverForegroundColor hover foreground of the color.
+     * @param columnIndex Number of the columns.
+     * @param rowIndex Number of the rows.
+     * @return Created cute button.
+     */
     public CuteButton addCuteButton(String text, String normalBackgroundColor, String normalForegroundColor, String hoverBackgroundColor,
                                     String hoverForegroundColor, int columnIndex, int rowIndex) {
         CuteButton button = new CuteButton(text, normalBackgroundColor, normalForegroundColor);
